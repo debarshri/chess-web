@@ -1,10 +1,9 @@
 package piece.black;
 
-import piece.Board;
+import piece.CommonMoves;
 import piece.Piece;
 import utils.PositionVector;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,42 +22,13 @@ public class BlackHorse implements Piece {
     @Override
     public Optional<PositionVector> steps(PositionVector from, PositionVector to) {
 
-        List<PositionVector> positionVectorList = new ArrayList<>();
+        System.out.println(from);
 
-        int horizontal = from.getHorizontal();
-        int vertical = from.getVertical();
+        List<PositionVector> positionVectors = CommonMoves.allMovesHorse(color, from);
 
+        System.out.println(positionVectors);
 
-        PositionVector posTo1 = new PositionVector(horizontal + 3, vertical + 1);
-        PositionVector posTo2 = new PositionVector(horizontal + 1, vertical + 3);
-        PositionVector posTo3 = new PositionVector(horizontal - 3, vertical - 1);
-        PositionVector posTo4 = new PositionVector(horizontal - 1, vertical - 3);
-
-        Board.getCellAt(posTo1).ifPresent(c -> {
-            if (!c.getPiece().color().equalsIgnoreCase(color)) {
-                positionVectorList.add(posTo1);
-            }
-        });
-
-        Board.getCellAt(posTo2).ifPresent(c -> {
-            if (!c.getPiece().color().equalsIgnoreCase(color)) {
-                positionVectorList.add(posTo2);
-            }
-        });
-
-        Board.getCellAt(posTo3).ifPresent(c -> {
-            if (!c.getPiece().color().equalsIgnoreCase(color)) {
-                positionVectorList.add(posTo3);
-            }
-        });
-
-        Board.getCellAt(posTo4).ifPresent(c -> {
-            if (!c.getPiece().color().equalsIgnoreCase(color)) {
-                positionVectorList.add(posTo4);
-            }
-        });
-
-        if (positionVectorList.contains(to)) {
+        if (positionVectors.contains(to)) {
             return Optional.of(to);
         } else {
             return Optional.empty();
