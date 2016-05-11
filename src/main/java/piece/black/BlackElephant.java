@@ -1,14 +1,14 @@
-package piece.white;
+package piece.black;
 
 import piece.Piece;
 import utils.PositionVector;
 
 import java.util.Optional;
 
-public class Horses implements Piece {
-    private final String color;
+public class BlackElephant implements Piece {
+    private String color;
 
-    public Horses(String color)  {
+    public BlackElephant(String color) {
         this.color = color;
     }
 
@@ -19,11 +19,12 @@ public class Horses implements Piece {
 
     @Override
     public Optional<PositionVector> steps(PositionVector from, PositionVector to) {
+
         return null;
     }
 
     @Override
     public String toString() {
-        return "♘";
+        return "♝";
     }
 }

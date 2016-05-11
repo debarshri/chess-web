@@ -55,39 +55,21 @@ public class Gamplay implements Route {
                 "      <script src=\"https://oss.maxcdn.com/respond/1.4.2/respond.min.js\"></script>\n" +
                 "    <![endif]-->\n" +
                 "  </head>\n" +
-                "  <body>\n" +
-                show +
-                "\n" +
-                "" +
-                "<hr />" +
+                "  <body>" +
+                "<div class=\"col-xs-6\">" +
+                "<h3>The Game</h3>\n" +
+                    show +
+                    "<a href=\"/\" class=\"btn btn-danger\" >Reset</a>" +
+                "</div>\n" +
                 "<div class=\"row\">" +
+                 "<br />" +
                 "<div class=\"col-xs-6\">" +
-                "<form class=\"form-group col-xs-10\" method=\"POST\" action=\"/move?color=white\">" +
-                "<h3> White pieces </h3>" +
-                "<legend>From</legend>" +
-                "<input type=\"text\" class=\"form-control\" name=\"from\" placeholder=\"horizontal,vertical e.g 1,2\" required/>" +
-
-                "<legend>To</legend>" +
-                "<input type=\"text\" class=\"form-control\" name=\"to\" placeholder=\"horizontal,vertical\" required/>" +
-                "<br />" +
-                "<button class=\"btn btn-default " + white + "\">Submit</button>" +
-                "</form>" +
+                      WhitePiecesForm(white) +
                 "</div>" +
-
                 "<div class=\"col-xs-6\">" +
-                "<form class=\"form-group col-xs-10\" method=\"POST\" action=\"/move?color=black\">" +
-                "<h3> Black pieces </h3>" +
-                "<legend>From</legend>" +
-                "<input type=\"text\" class=\"form-control\" name=\"from\" placeholder=\"horizontal,vertical e.g 2-1\" required/>" +
-
-                "<legend>To</legend>" +
-                "<input type=\"text\" class=\"form-control\" name=\"to\" placeholder=\"horizontal,vertical\" required/>" +
-                "<br />" +
-                "<button class=\"btn btn-default " + black + "\">Submit</button>" +
-                "</form>" +
+                     blackPieceForm(black) +
                 "<div>" +
-                "<a href=\"/\" class=\"btn btn-danger\" >Reset</a>" +
-                "</div>"+
+                "</div>" +
                 "</div>" +
                 "" +
 
@@ -98,5 +80,37 @@ public class Gamplay implements Route {
                 "    <script src=\"js/bootstrap.min.js\"></script>\n" +
                 "  </body>\n" +
                 "</html>";
+    }
+
+    private String blackPieceForm(String black) {
+        return "<form class=\"form-group col-xs-10 well\" method=\"POST\" action=\"/move?color=black\">" +
+                "<h3> Black pieces </h3>" +
+                "  <div class=\"form-group\">\n" +
+                "<label>From</label>" +
+                "<input type=\"text\" class=\"form-control\" name=\"from\" placeholder=\"horizontal,vertical e.g 1,2\" required/>" +
+                "</div>" +
+                "  <div class=\"form-group\">\n" +
+
+                "<label>To</label>" +
+                "<input type=\"text\" class=\"form-control\" name=\"to\" placeholder=\"horizontal,vertical\" required/>" +
+                "</div>" +
+                "<button class=\"btn btn-default " + black + "\">Submit</button>" +
+                "</form>";
+    }
+
+    private String WhitePiecesForm(String white) {
+        return "<form class=\"col-xs-10 well\" method=\"POST\" action=\"/move?color=white\">" +
+                "<h3> White pieces </h3>" +
+                "  <div class=\"form-group\">\n" +
+                         "<label>From</label>" +
+                         "<input type=\"text\" class=\"form-control\" name=\"from\" placeholder=\"horizontal,vertical e.g 1,2\" required/>" +
+                   "</div>" +
+
+                "  <div class=\"form-group\">\n" +
+                "<label>To</label>" +
+                "<input type=\"text\" class=\"form-control\" name=\"to\" placeholder=\"horizontal,vertical\" required/>" +
+                "</div>"+
+                "<button class=\"btn btn-default " + white + "\">Submit</button>" +
+                "</form>";
     }
 }

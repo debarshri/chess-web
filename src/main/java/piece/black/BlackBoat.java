@@ -29,7 +29,6 @@ public class BlackBoat implements Piece {
             {
 
                 System.out.println(i);
-                try {
 
                     Cell cell = Board.getCellAt(new PositionVector(i, to.getHorizontal())).get();
 
@@ -42,9 +41,6 @@ public class BlackBoat implements Piece {
                         return Optional.empty();
                     }
 
-                } catch (PositionException e) {
-                    e.printStackTrace();
-                }
             }
             return Optional.of(to);
         }

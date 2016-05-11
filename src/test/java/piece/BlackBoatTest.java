@@ -1,9 +1,9 @@
 package piece;
 
+import junit.framework.Assert;
 import org.junit.Test;
 import piece.black.BlackBoat;
 import server.Cell;
-import sun.jvm.hotspot.utilities.Assert;
 import utils.Color;
 import utils.PositionException;
 import utils.PositionVector;
@@ -22,7 +22,7 @@ public class BlackBoatTest {
         Board.move(Color.BLACK, new PositionVector(8,1), new PositionVector(6,1));
 
         Optional<Cell> cellAt = Board.getCellAt(new PositionVector(6, 1));
-        Assert.that(cellAt.get().getPiece() instanceof BlackBoat, "Blackboat vertical works");
+        Assert.assertTrue(cellAt.get().getPiece() instanceof BlackBoat);
     }
 
     @Test
@@ -36,7 +36,7 @@ public class BlackBoatTest {
         Board.move(Color.BLACK, new PositionVector(6,1), new PositionVector(6,5));
 
         Optional<Cell> cellAt = Board.getCellAt(new PositionVector(6, 5));
-        Assert.that(cellAt.get().getPiece() instanceof BlackBoat, "Blackboat vertical works");
+        Assert.assertTrue(cellAt.get().getPiece() instanceof BlackBoat);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class BlackBoatTest {
         Board.move(Color.BLACK, new PositionVector(6,1), new PositionVector(6,5));
 
         Optional<Cell> cellAt = Board.getCellAt(new PositionVector(6, 5));
-        Assert.that(cellAt.get().getPiece() instanceof BlackBoat, "Blackboat vertical works");
+        Assert.assertTrue(cellAt.get().getPiece() instanceof BlackBoat);
     }
 
 }

@@ -1,8 +1,6 @@
 package piece;
 
-import piece.black.BlackBoat;
-import piece.black.BlackKing;
-import piece.black.BlackQueen;
+import piece.black.*;
 import piece.white.*;
 import server.Cell;
 import utils.Color;
@@ -23,14 +21,14 @@ public class Board {
             cells = new ArrayList<>();
 
             cells.add(new Cell(1, 1, new WhiteBoat(Color.WHITE)));
-            cells.add(new Cell(1, 2, new Horses(Color.WHITE)));
+            cells.add(new Cell(1, 2, new Horse(Color.WHITE)));
             cells.add(new Cell(1, 3, new Elephant(Color.WHITE)));
 
             cells.add(new Cell(1, 4, new Queen(Color.WHITE)));
             cells.add(new Cell(1, 5, new King(Color.WHITE)));
 
             cells.add(new Cell(1, 6, new Elephant(Color.WHITE)));
-            cells.add(new Cell(1, 7, new Horses(Color.WHITE)));
+            cells.add(new Cell(1, 7, new Horse(Color.WHITE)));
             cells.add(new Cell(1, 8, new WhiteBoat(Color.WHITE)));
 
             for (int i = 0; i < 8; i++) {
@@ -44,19 +42,19 @@ public class Board {
             }
 
             for (int i = 0; i < 8; i++) {
-                cells.add(new Cell(7, i + 1, new Pawn(Color.BLACK)));
+                cells.add(new Cell(7, i + 1, new BlackPawn(Color.BLACK)));
             }
 
             cells.add(new Cell(8, 1, new BlackBoat(Color.BLACK)));
-            cells.add(new Cell(8, 2, new Horses(Color.BLACK)));
-            cells.add(new Cell(8, 3, new Elephant(Color.BLACK)));
+            cells.add(new Cell(8, 2, new BlackHorse(Color.BLACK)));
+            cells.add(new Cell(8, 3, new BlackElephant(Color.BLACK)));
 
             cells.add(new Cell(8, 4, new BlackQueen(Color.BLACK)));
             cells.add(new Cell(8, 5, new BlackKing(Color.BLACK)));
 
 
-            cells.add(new Cell(8, 8, new Elephant(Color.BLACK)));
-            cells.add(new Cell(8, 7, new Horses(Color.BLACK)));
+            cells.add(new Cell(8, 6, new BlackElephant(Color.BLACK)));
+            cells.add(new Cell(8, 7, new BlackHorse(Color.BLACK)));
             cells.add(new Cell(8, 8, new BlackBoat(Color.BLACK)));
 
         }
@@ -67,7 +65,8 @@ public class Board {
 
     public static void move(String color, PositionVector from, PositionVector to) throws PositionException {
 
-        System.out.println("From " + from + " to " + to);
+        //  Add logger
+        //  System.out.println("From " + from + " to " + to);
 
         Optional<Cell> optionalTo = getCellAt(to);
         Optional<Cell> optionalFrom = getCellAt(from)
@@ -91,8 +90,11 @@ public class Board {
                                 }
                         )
         ));
+    }
 
-
+    public static boolean checkForCheck(String color) {
+        //todo
+        return false;
     }
 
     public static Optional<Cell> getCellAt(PositionVector to) {
@@ -104,21 +106,11 @@ public class Board {
 
     }
 
-    public static void main(String[] args) throws PositionException {
-        Board.create();
-
-        Board.move(Color.WHITE, new PositionVector(2, 1), new PositionVector(3, 1));
-        Board.move(Color.WHITE, new PositionVector(3, 1), new PositionVector(4, 2));
-        Optional<Cell> cellAt = Board.getCellAt(new PositionVector(3, 2));
-        System.out.println(cellAt.get().getPiece());
-
-    }
-
     public static String show() {
 
         try {
 
-            final String[] s = {"<div class=\"col-xs-5\"><table class=\"table table-bordered table-striped \"><tr>"};
+            final String[] s = {"<table class=\"table table-bordered table-striped \"><tr>"};
 
             String th = "";
 
@@ -155,7 +147,7 @@ public class Board {
                     return "<td>" + p.getPiece() + "</td>";
                 }
             }).forEach(p -> s[0] = s[0] + p);
-            s[0] = s[0] + "</tr></table></div>";
+            s[0] = s[0] + "</tr></table>";
 
             return s[0];
 

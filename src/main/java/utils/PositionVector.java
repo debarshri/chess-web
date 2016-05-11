@@ -13,8 +13,7 @@ public class PositionVector {
     private final int vertical;
     private final int horizontal;
 
-    public PositionVector(int vertical, int horizontal) throws PositionException {
-
+    public PositionVector(int vertical, int horizontal) {
 
         this.vertical = vertical;
         this.horizontal = horizontal;

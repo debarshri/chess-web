@@ -37,7 +37,6 @@ public class BlackKing implements Piece {
 
         List<PositionVector> positionVectors = new ArrayList<>();
 
-        try {
 
             int horizontal = positionVector.getHorizontal();
             int vertical = positionVector.getVertical();
@@ -47,9 +46,6 @@ public class BlackKing implements Piece {
             positionVectors.add(new PositionVector(vertical, horizontal + 1));
             positionVectors.add(new PositionVector(vertical, horizontal));
 
-        } catch (PositionException e) {
-            e.printStackTrace();
-        }
 
         return positionVectors;
     }

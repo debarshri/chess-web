@@ -1,4 +1,4 @@
-package piece.white;
+package piece.black;
 
 import piece.Board;
 import piece.Piece;
@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Pawn implements Piece {
+public class BlackPawn implements Piece {
 
     private String color;
     private int stepMultiplier;
 
-    public Pawn(String color) throws PositionException {
+    public BlackPawn(String color) throws PositionException {
         this.color = color;
-        this.stepMultiplier = 1;
+        this.stepMultiplier = -1;
     }
 
     @Override
@@ -42,6 +42,7 @@ public class Pawn implements Piece {
 
         List<PositionVector> positionVectors = new ArrayList<>();
 
+
         int horizontal = positionVector.getHorizontal();
         int vertical = positionVector.getVertical();
 
@@ -52,28 +53,30 @@ public class Pawn implements Piece {
 
             if (piece.color().isEmpty()) {
                 positionVectors.add(new PositionVector(vertical + stepMultiplier, horizontal));
-
             }
-
         });
 
-        Optional<Cell> pieceDiagonallyAt = Board.getCellAt(new PositionVector(vertical + stepMultiplier, horizontal + stepMultiplier));
+        Optional<Cell> pieceDiagonallyAt = Board.getCellAt(new PositionVector(vertical +
+                stepMultiplier, horizontal + stepMultiplier));
 
         pieceDiagonallyAt.ifPresent(c -> {
             Piece piece = c.getPiece();
 
             if (color.equalsIgnoreCase(Color.getOther(piece.color()))) {
-                positionVectors.add(new PositionVector(vertical + stepMultiplier, horizontal + stepMultiplier));
+                positionVectors.add(new PositionVector(vertical + stepMultiplier,
+                        horizontal + stepMultiplier));
             }
         });
 
-        Optional<Cell> pieceDiagonallyLeft = Board.getCellAt(new PositionVector(vertical - stepMultiplier, horizontal - stepMultiplier));
+        Optional<Cell> pieceDiagonallyLeft = Board.getCellAt(new PositionVector(vertical - stepMultiplier,
+                horizontal - stepMultiplier));
 
         pieceDiagonallyLeft.ifPresent(c -> {
             Piece piece = c.getPiece();
 
             if (color.equalsIgnoreCase(Color.getOther(piece.color()))) {
-                positionVectors.add(new PositionVector(vertical - stepMultiplier, horizontal - stepMultiplier));
+                positionVectors.add(new PositionVector(vertical - stepMultiplier,
+                        horizontal - stepMultiplier));
 
             }
         });
@@ -83,6 +86,6 @@ public class Pawn implements Piece {
 
     @Override
     public String toString() {
-        return "♙";
+        return "♟";
     }
 }
