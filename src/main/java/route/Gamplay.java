@@ -1,61 +1,36 @@
 package route;
 
 import piece.Board;
-import piece.Piece;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import utils.PositionException;
-
-import java.util.List;
-import java.util.function.Function;
 
 
 public class Gamplay implements Route {
-    private Board board;
-    private Function<Piece, String> pieceStringFunction;
-
-    public Gamplay(Board board) {
-        this.board = board;
-    }
 
     @Override
     public Object handle(Request request, Response response) throws Exception {
 
-        String color = request.cookie("color");
-        final String[] s = {"<table class=\"table\"><tr>"};
 
-        String th = "";
+        String show = Board.show();
 
-        for (int i = 0; i <= 8; i++) {
-            if (i == 0) {
-                th = th + "<td></td>";
-            } else {
-                th = th + "<td>" + i + "</td>";
-            }
-        }
+        //Show Game status
 
-        try {
-            List<Piece> pieces = board.create(color);
+        String turn = request.cookie("turn");
 
-            final int[] changeRow = {1};
-            s[0] = s[0] + th + "</tr>";
-            s[0] = s[0] + String.format("<td>%s</td>", changeRow[0]);
+        String black;
+        String white;
 
-            pieceStringFunction = p -> {
-                if (changeRow[0] != p.currentPosition().getVertical()) {
-                    changeRow[0] = p.currentPosition().getVertical();
-                    return "</tr><tr><td>" + changeRow[0] + "</td><td>" + p.getClass().getName() + " (" + p.color() + ") </td>";
-                } else {
-                    return "<td>" + p.getClass().getName() + "(" + p.color() + ")</td>";
-                }
-            };
+        if (turn == null) {
+            black = "disabled";
+            white = "";
 
-            pieces.stream().map(pieceStringFunction).forEach(p -> s[0] = s[0] + p);
-            s[0] = s[0] + "</tr></table>";
-
-        } catch (PositionException e) {
-            e.printStackTrace();
+        } else if (turn.equalsIgnoreCase("WHITE")) {
+            black = "disabled";
+            white = "";
+        } else {
+            white = "disabled";
+            black = "";
         }
 
         return "<!DOCTYPE html>\n" +
@@ -81,20 +56,42 @@ public class Gamplay implements Route {
                 "    <![endif]-->\n" +
                 "  </head>\n" +
                 "  <body>\n" +
-                s[0] +
+                show +
                 "\n" +
                 "" +
                 "<hr />" +
-                "" +
-                "<form class=\"form-group col-xs-2\" method=\"POST\" action=\"/move\">" +
+                "<div class=\"row\">" +
+                "<div class=\"col-xs-6\">" +
+                "<form class=\"form-group col-xs-10\" method=\"POST\" action=\"/move?color=white\">" +
+                "<h3> White pieces </h3>" +
                 "<legend>From</legend>" +
-                "<input type=\"text\" class=\"form-control\" name=\"from\" placeholder=\"vertical-horizontal\" required/>" +
+                "<input type=\"text\" class=\"form-control\" name=\"from\" placeholder=\"horizontal,vertical e.g 1,2\" required/>" +
 
                 "<legend>To</legend>" +
-                "<input type=\"text\" class=\"form-control\" name=\"to\" placeholder=\"vertical-horizontal\" required/>" +
+                "<input type=\"text\" class=\"form-control\" name=\"to\" placeholder=\"horizontal,vertical\" required/>" +
                 "<br />" +
-                "<button class=\"btn btn-default\">Submit</button>" +
+                "<button class=\"btn btn-default " + white + "\">Submit</button>" +
                 "</form>" +
+                "</div>" +
+
+                "<div class=\"col-xs-6\">" +
+                "<form class=\"form-group col-xs-10\" method=\"POST\" action=\"/move?color=black\">" +
+                "<h3> Black pieces </h3>" +
+                "<legend>From</legend>" +
+                "<input type=\"text\" class=\"form-control\" name=\"from\" placeholder=\"horizontal,vertical e.g 2-1\" required/>" +
+
+                "<legend>To</legend>" +
+                "<input type=\"text\" class=\"form-control\" name=\"to\" placeholder=\"horizontal,vertical\" required/>" +
+                "<br />" +
+                "<button class=\"btn btn-default " + black + "\">Submit</button>" +
+                "</form>" +
+                "<div>" +
+                "<a href=\"/\" class=\"btn btn-danger\" >Reset</a>" +
+                "</div>"+
+                "</div>" +
+                "" +
+
+                "</div>" +
                 "    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->\n" +
                 "    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>\n" +
                 "    <!-- Include all compiled plugins (below), or include individual files as needed -->\n" +

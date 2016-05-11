@@ -1,5 +1,6 @@
-package piece;
+package piece.white;
 
+import piece.Piece;
 import utils.PositionException;
 import utils.PositionVector;
 
@@ -7,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Pawn implements Piece {
+public class King implements Piece {
 
-    private final PositionVector postion;
     private String color;
 
-    public Pawn(String color, int vertical, int horizontal) throws PositionException {
-        this.color = color;
-        this.postion = new PositionVector(vertical, horizontal);
+    public King(String white) {
+        this.color = white;
     }
 
     @Override
@@ -23,14 +22,14 @@ public class Pawn implements Piece {
     }
 
     @Override
-    public Optional<PositionVector> steps(PositionVector to, PositionVector from) {
-        PositionVector positionVector = currentPosition();
+    public Optional<PositionVector> steps(PositionVector from, PositionVector to) {
 
-        List<PositionVector> positionVectors = generatePossibleMoves(positionVector);
+        List<PositionVector> positionVectors = generatePossibleMoves(from);
 
         if (positionVectors.contains(to)) {
             return Optional.of(to);
         }
+
         return Optional.empty();
     }
 
@@ -55,19 +54,8 @@ public class Pawn implements Piece {
         return positionVectors;
     }
 
-
     @Override
-    public PositionVector currentPosition() {
-        return postion;
-    }
-
-    @Override
-    public void setPostion(int horizontal, int vertical) throws PositionException {
-
-    }
-
-    @Override
-    public void setPostion(PositionVector postionVector) throws PositionException {
-
+    public String toString() {
+        return "♔";
     }
 }

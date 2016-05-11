@@ -1,15 +1,14 @@
-package piece;
+package piece.white;
 
 import piece.Piece;
-import utils.PositionException;
 import utils.PositionVector;
 
 import java.util.Optional;
 
-public class Boat implements Piece {
+public class Horses implements Piece {
     private final String color;
 
-    public Boat(String color) throws PositionException {
+    public Horses(String color)  {
         this.color = color;
     }
 
@@ -24,11 +23,7 @@ public class Boat implements Piece {
     }
 
     @Override
-    public void setPostion(int horizontal, int vertical) throws PositionException {
-    }
-
-    @Override
-    public void setPostion(PositionVector postionVector) throws PositionException {
-
+    public String toString() {
+        return "♘";
     }
 }

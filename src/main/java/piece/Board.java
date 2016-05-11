@@ -1,5 +1,9 @@
 package piece;
 
+import piece.black.BlackBoat;
+import piece.black.BlackKing;
+import piece.black.BlackQueen;
+import piece.white.*;
 import server.Cell;
 import utils.Color;
 import utils.PositionException;
@@ -7,131 +11,158 @@ import utils.PositionVector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-/*
- 1 2 3 4 5 6 7 8
-A
-B
-C
-D
-E
-F
-G
-H
- */
 public class Board {
 
-    private static List<Piece> pieces;
     private static List<Cell> cells;
 
-    public Board() {
+    public static List<Cell> create() throws PositionException {
 
-        if(pieces == null)
-        {
-            pieces = new ArrayList<>();
-        }
-
-
-        if(cells == null)
-        {
+        if (cells == null) {
             cells = new ArrayList<>();
-        }
-    }
 
-    public List<Piece> getPieces()
-    {
-        return pieces;
-    }
+            cells.add(new Cell(1, 1, new WhiteBoat(Color.WHITE)));
+            cells.add(new Cell(1, 2, new Horses(Color.WHITE)));
+            cells.add(new Cell(1, 3, new Elephant(Color.WHITE)));
 
-    public List<Piece> create(String color) throws PositionException {
+            cells.add(new Cell(1, 4, new Queen(Color.WHITE)));
+            cells.add(new Cell(1, 5, new King(Color.WHITE)));
 
-        if(pieces.size() == 0 && cells.size() == 0)
-        {
-            cells.add(new Cell(1,1, new Boat(color)));
+            cells.add(new Cell(1, 6, new Elephant(Color.WHITE)));
+            cells.add(new Cell(1, 7, new Horses(Color.WHITE)));
+            cells.add(new Cell(1, 8, new WhiteBoat(Color.WHITE)));
 
-            pieces.add(new Elephant(color, 1,2));
-            pieces.add(new Horses(color, 1,3));
-
-            pieces.add(new Boat(color,1,1));
-            pieces.add(new Elephant(color, 1,2));
-            pieces.add(new Horses(color, 1,3));
-
-            pieces.add(new King(color, 1,4));
-            pieces.add(new Queen(color, 1,5));
-
-            pieces.add(new Horses(color, 1,6));
-            pieces.add(new Elephant(color, 1,7));
-            pieces.add(new Boat(color, 1,8));
-
-            for(int i=0; i < 8; i++)
-            {
-                pieces.add(new Pawn(color, 2,i+1));
+            for (int i = 0; i < 8; i++) {
+                cells.add(new Cell(2, i + 1, new Pawn(Color.WHITE)));
             }
 
-                for(int j=2; j < 6; j++)
-                {
-                    for(int i=0; i < 8; i++)
-                    {
-                    pieces.add(new Empty("", j+1,i+1));
+            for (int j = 2; j < 6; j++) {
+                for (int i = 0; i < 8; i++) {
+                    cells.add(new Cell(j + 1, i + 1, new Empty("")));
                 }
             }
 
-            for(int i=0; i < 8; i++)
-            {
-                pieces.add(new Pawn(Color.getOther(color), 7,i+1));
+            for (int i = 0; i < 8; i++) {
+                cells.add(new Cell(7, i + 1, new Pawn(Color.BLACK)));
             }
 
-            pieces.add(new Boat(Color.getOther(color),8,1));
-            pieces.add(new Elephant(Color.getOther(color), 8,2));
-            pieces.add(new Horses(Color.getOther(color), 8,3));
+            cells.add(new Cell(8, 1, new BlackBoat(Color.BLACK)));
+            cells.add(new Cell(8, 2, new Horses(Color.BLACK)));
+            cells.add(new Cell(8, 3, new Elephant(Color.BLACK)));
 
-            pieces.add(new King(Color.getOther(color), 8,4));
-            pieces.add(new Queen(Color.getOther(color), 8,5));
+            cells.add(new Cell(8, 4, new BlackQueen(Color.BLACK)));
+            cells.add(new Cell(8, 5, new BlackKing(Color.BLACK)));
 
-            pieces.add(new Horses(Color.getOther(color), 8,6));
-            pieces.add(new Elephant(Color.getOther(color), 8,7));
-            pieces.add(new Boat(Color.getOther(color), 8,8));
+
+            cells.add(new Cell(8, 8, new Elephant(Color.BLACK)));
+            cells.add(new Cell(8, 7, new Horses(Color.BLACK)));
+            cells.add(new Cell(8, 8, new BlackBoat(Color.BLACK)));
 
         }
 
-        return pieces;
+        return cells;
 
     }
 
-    public void move(String color, PositionVector from, PositionVector to) throws PositionException {
-        List<Piece> collect = pieces.stream()
-                .filter(p -> p.color().equalsIgnoreCase(color))
-                .filter(p -> p.currentPosition().getHorizontal() == from.getHorizontal() &&
-                        p.currentPosition().getVertical() == from.getVertical())
-                .collect(Collectors.toList());
+    public static void move(String color, PositionVector from, PositionVector to) throws PositionException {
 
-        System.out.println("Pieces found"+collect.size());
-        if(collect.size() == 1)
-        {
-            Piece piece = collect.get(0);
-            piece.steps(from, to).ifPresent( p -> {
-                try {
+        System.out.println("From " + from + " to " + to);
 
-                    System.out.println("There,.,,");
-                    piece.setPostion(p);
+        Optional<Cell> optionalTo = getCellAt(to);
+        Optional<Cell> optionalFrom = getCellAt(from)
+                .filter(p -> p.getPiece().color()
+                        .equalsIgnoreCase(color));
 
-                    pieces.stream()
-                            .filter( k -> k.currentPosition() == p && !k.color().equals(piece.color()))
-                            .findFirst()
-                            .ifPresent(k -> pieces.remove(k));
+        optionalTo.ifPresent(cellTo -> optionalFrom.ifPresent(
+                cellFrom -> cellFrom.getPiece()
+                        .steps(from, to)
+                        .ifPresent(p -> {
+                                    Piece piece = cellTo.getPiece();
+                                    Piece piece1 = cellFrom.getPiece();
 
-                } catch (PositionException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+                                    if (piece.color().equalsIgnoreCase(Color.getOther(piece1.color()))) {
+                                        cellTo.setPiece(piece1);
+                                        cellFrom.setPiece(new Empty(""));
+                                    } else {
+                                        cellTo.setPiece(piece1);
+                                        cellFrom.setPiece(piece);
+                                    }
+                                }
+                        )
+        ));
+
+
+    }
+
+    public static Optional<Cell> getCellAt(PositionVector to) {
+
+        return cells.stream()
+                .filter(c -> c.getHorizontal() == to.getHorizontal() &&
+                        c.getVertical() == to.getVertical())
+                .findAny();
+
     }
 
     public static void main(String[] args) throws PositionException {
-        Board board = new Board();
-        board.create(Color.WHITE);
+        Board.create();
 
+        Board.move(Color.WHITE, new PositionVector(2, 1), new PositionVector(3, 1));
+        Board.move(Color.WHITE, new PositionVector(3, 1), new PositionVector(4, 2));
+        Optional<Cell> cellAt = Board.getCellAt(new PositionVector(3, 2));
+        System.out.println(cellAt.get().getPiece());
+
+    }
+
+    public static String show() {
+
+        try {
+
+            final String[] s = {"<div class=\"col-xs-5\"><table class=\"table table-bordered table-striped \"><tr>"};
+
+            String th = "";
+
+            for (int i = 0; i <= 8; i++) {
+                if (i == 0) {
+                    th = th + "<td></td>";
+                } else {
+                    th = th + "<td>" + i + "</td>";
+                }
+            }
+
+            final int[] changeRow = {1};
+
+            s[0] = s[0] + th + "</tr>";
+            s[0] = s[0] + "<td>" + changeRow[0] + "</td>";
+
+            create().stream().map(p -> {
+
+                if (changeRow[0] != p.getVertical()) {
+                    changeRow[0] = p.getVertical();
+
+                    String color = p.getPiece().color();
+
+                    if (color.isEmpty()) {
+                        return "</tr><tr><td>" + changeRow[0] + "</td><td></td>";
+                    }
+                    return "</tr><tr><td>" + changeRow[0] + "</td><td>" + p.getPiece() + " </td>";
+                } else {
+                    String color = p.getPiece().color();
+
+                    if (color.isEmpty()) {
+                        return "<td></td>";
+                    }
+                    return "<td>" + p.getPiece() + "</td>";
+                }
+            }).forEach(p -> s[0] = s[0] + p);
+            s[0] = s[0] + "</tr></table></div>";
+
+            return s[0];
+
+        } catch (PositionException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }

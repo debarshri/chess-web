@@ -15,10 +15,7 @@ public class PositionVector {
 
     public PositionVector(int vertical, int horizontal) throws PositionException {
 
-        if(vertical > 8 || vertical < 1 || horizontal > 8 || horizontal < 1)
-        {
-            throw new PositionException();
-        }
+
         this.vertical = vertical;
         this.horizontal = horizontal;
     }
@@ -40,5 +37,13 @@ public class PositionVector {
         int result = vertical;
         result = 31 * result + horizontal;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "PositionVector{" +
+                "vertical=" + vertical +
+                ", horizontal=" + horizontal +
+                '}';
     }
 }

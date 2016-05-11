@@ -1,7 +1,8 @@
 package server;
 
-import piece.*;
 import route.Gamplay;
+import route.Move;
+import route.SetOption;
 import route.StartApp;
 import spark.Spark;
 
@@ -10,14 +11,12 @@ public class ServerMain {
 
         Spark.port(8080);
 
-        Board board = new Board();
-
         Spark.get("/", new StartApp());
 
         Spark.post("/play", new SetOption());
-        Spark.get("/play", new Gamplay(board));
+        Spark.get("/play", new Gamplay());
 
-        Spark.post("/move", new Move(board));
+        Spark.post("/move", new Move());
 
 
     }

@@ -1,4 +1,4 @@
-package piece;
+package piece.black;
 
 import piece.Piece;
 import utils.PositionException;
@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class King implements Piece {
+public class BlackKing implements Piece {
 
-    private PositionVector position;
     private String color;
 
-    public King(String white, int vertical, int horizontal) throws PositionException {
+    public BlackKing(String white) {
         this.color = white;
-        this.position = new PositionVector(vertical,horizontal);
     }
 
     @Override
@@ -26,9 +24,7 @@ public class King implements Piece {
     @Override
     public Optional<PositionVector> steps(PositionVector from, PositionVector to) {
 
-        PositionVector positionVector = currentPosition();
-
-        List<PositionVector> positionVectors = generatePossibleMoves(positionVector);
+        List<PositionVector> positionVectors = generatePossibleMoves(from);
 
         if (positionVectors.contains(to)) {
             return Optional.of(to);
@@ -59,19 +55,7 @@ public class King implements Piece {
     }
 
     @Override
-    public PositionVector currentPosition() {
-        return position;
-    }
-
-    @Override
-    public void setPostion(int vertical, int horizontal) throws PositionException {
-
-        this.position = new PositionVector(vertical,horizontal);
-
-    }
-
-    @Override
-    public void setPostion(PositionVector postionVector) throws PositionException {
-        this.position = postionVector;
+    public String toString() {
+        return "♚";
     }
 }

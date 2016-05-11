@@ -5,7 +5,7 @@ public class Color {
     public static final String BLACK = "BLACK";
 
     public static String getOther(String color) {
-        if (color.equals("WHITE")) {
+        if (color.equalsIgnoreCase("WHITE")) {
             return BLACK;
         } else {
             return WHITE;
