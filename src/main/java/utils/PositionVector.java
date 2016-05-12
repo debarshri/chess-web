@@ -26,8 +26,8 @@ public class PositionVector {
 
         PositionVector that = (PositionVector) o;
 
-        if (vertical != that.vertical) return false;
-        return horizontal == that.horizontal;
+        return vertical == that.vertical &&
+                horizontal == that.horizontal;
 
     }
 

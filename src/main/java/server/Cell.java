@@ -1,19 +1,22 @@
 package server;
 
-import piece.Piece;
+import game.Piece;
+import utils.PositionVector;
 
 public class Cell {
+    private final PositionVector postionVector;
     private int vertical;
     private int horizontal;
     private Piece piece;
 
-    public Cell(int vertical, int horizontal, Piece piece) {
-        this.vertical = vertical;
-        this.horizontal = horizontal;
+    public Cell(int x, int y, Piece piece) {
+        this.vertical = x;
+        this.horizontal = y;
+        this.postionVector = new PositionVector(x, y);
         this.piece = piece;
     }
 
-    public int getVertical() {
+    public int getX() {
         return vertical;
     }
 
@@ -21,7 +24,7 @@ public class Cell {
         this.vertical = vertical;
     }
 
-    public int getHorizontal() {
+    public int getY() {
         return horizontal;
     }
 
@@ -35,5 +38,9 @@ public class Cell {
 
     public void setPiece(Piece piece) {
         this.piece = piece;
+    }
+
+    public PositionVector getPostionVector() {
+        return postionVector;
     }
 }

@@ -1,14 +1,17 @@
 package piece;
 
+import game.Piece;
 import utils.PositionVector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class Empty implements Piece {
 
     private final String color;
 
-    public Empty(String s){
+    public Empty(String s) {
 
         this.color = s;
     }
@@ -19,8 +22,13 @@ public class Empty implements Piece {
     }
 
     @Override
-    public Optional<PositionVector> steps(PositionVector from, PositionVector to) {
+    public Optional<PositionVector> step(PositionVector from, PositionVector to) {
         return Optional.empty();
+    }
+
+    @Override
+    public List<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
+        return new ArrayList<>();
     }
 
 }
