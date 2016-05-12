@@ -49,61 +49,54 @@ public class Elephant implements Piece {
 
     private void moveBackwardRightSide(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        outerloop:
         for(int x=from.getVertical()-1; x >= to.getVertical(); x--)
         {
-            for(int y = x; y <= to.getHorizontal(); y++)
+            for(int y = to.getHorizontal()+1; y <= to.getHorizontal(); y++)
             {
                 Board.getCellAt(new PositionVector(x, y))
                         .filter( c -> !c.getPiece().color().equalsIgnoreCase(color))
                         .ifPresent(c ->positionVectors.add(c.getPostionVector()));
 
-                break outerloop;
             }
         }
     }
 
     private void moveBackwardLeftSide(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        outerloop:
         for (int y = from.getHorizontal()-1; y >= to.getHorizontal(); y--) {
-            for (int x = y; x >= to.getVertical(); x--) {
+            for (int x = from.getVertical()-1; x >= to.getVertical(); x--) {
 
                 Board.getCellAt(x, y)
                         .filter(c -> !c.getPiece().color().equalsIgnoreCase(color)).ifPresent(c ->
                         positionVectors.add(c.getPostionVector()));
 
-                break outerloop;
             }
         }
     }
 
     private void moveBackwardRight(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
-        outerloop:
+
         for (int x = from.getVertical()+1; x <= to.getVertical(); x++) {
-            for (int y = to.getHorizontal(); y >= to.getHorizontal(); y--) {
+            for (int y = to.getHorizontal()-1; y >= to.getVertical(); y--) {
 
                 Board.getCellAt(x, y)
                         .filter(c -> !c.getPiece().color().equalsIgnoreCase(color)).ifPresent(c ->
                         positionVectors.add(c.getPostionVector()));
-                break outerloop;
             }
         }
     }
 
     private void moveForwardRightSide(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        outerloop:
         for (int x = from.getVertical()+1; x <= to.getVertical(); x++) {
-            for (int y = x; y <= to.getHorizontal(); y++) {
+            for (int y = from.getHorizontal()+1; y <= to.getHorizontal(); y++) {
                 PositionVector to1 = new PositionVector(x, y);
 
-                Board.getCellAt(to1)
+                Board.getCellAt(x,y)
                         .filter(c -> !c.getPiece().color().equalsIgnoreCase(color))
                         .ifPresent(c ->
-                        positionVectors.add(to1));
+                                positionVectors.add(to1));
 
-                break outerloop;
             }
         }
     }
