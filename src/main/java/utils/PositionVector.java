@@ -2,21 +2,21 @@ package utils;
 
 public class PositionVector {
 
-    public int getVertical() {
-        return vertical;
+    public int getX() {
+        return x;
     }
 
-    public int getHorizontal() {
-        return horizontal;
+    public int getY() {
+        return y;
     }
 
-    private final int vertical;
-    private final int horizontal;
+    private final int x;
+    private final int y;
 
-    public PositionVector(int vertical, int horizontal) {
+    public PositionVector(int x, int y) {
 
-        this.vertical = vertical;
-        this.horizontal = horizontal;
+        this.x = x;
+        this.y = y;
     }
 
     @Override
@@ -26,23 +26,23 @@ public class PositionVector {
 
         PositionVector that = (PositionVector) o;
 
-        return vertical == that.vertical &&
-                horizontal == that.horizontal;
+        return x == that.x &&
+                y == that.y;
 
     }
 
     @Override
     public int hashCode() {
-        int result = vertical;
-        result = 31 * result + horizontal;
+        int result = x;
+        result = 31 * result + y;
         return result;
     }
 
     @Override
     public String toString() {
         return "PositionVector{" +
-                "vertical=" + vertical +
-                ", horizontal=" + horizontal +
+                "x=" + x +
+                ", y=" + y +
                 '}';
     }
 }

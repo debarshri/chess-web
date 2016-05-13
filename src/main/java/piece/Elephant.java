@@ -1,6 +1,5 @@
 package piece;
 
-import game.Board;
 import game.Piece;
 import utils.Color;
 import utils.PositionVector;
@@ -9,9 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static game.Board.getCellAt;
+import static game.Initializer.calculateAbsoluteSlope;
+import static java.lang.Math.abs;
+
 public class Elephant implements Piece {
     private String color;
-
     public Elephant(String color) {
         this.color = color;
     }
@@ -35,70 +37,97 @@ public class Elephant implements Piece {
 
     @Override
     public List<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
+        return addSteps(from, to);
+    }
+
+    private List<PositionVector> addSteps(PositionVector from, PositionVector to) {
 
         List<PositionVector> positionVectors = new ArrayList<>();
 
-        moveForwardRightSide(from, to, positionVectors);
-        moveBackwardRight(from, to, positionVectors);
+        if (abs(calculateAbsoluteSlope(from, to)) == 1.0d) {
 
-        moveBackwardLeftSide(from, to, positionVectors);
-        moveBackwardRightSide(from, to, positionVectors);
+            moveForwardRight(from, to, positionVectors);
+            moveBackwardRight(from, to, positionVectors);
+            moveForwardLeft(from, to, positionVectors);
+            moveBackwardLeft(from, to, positionVectors);
+        }
 
         return positionVectors;
     }
 
-    private void moveBackwardRightSide(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
-
-        for(int x=from.getVertical()-1; x >= to.getVertical(); x--)
-        {
-            for(int y = to.getHorizontal()+1; y <= to.getHorizontal(); y++)
-            {
-                Board.getCellAt(new PositionVector(x, y))
-                        .filter( c -> !c.getPiece().color().equalsIgnoreCase(color))
-                        .ifPresent(c ->positionVectors.add(c.getPostionVector()));
-
-            }
-        }
-    }
-
-    private void moveBackwardLeftSide(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
-
-        for (int y = from.getHorizontal()-1; y >= to.getHorizontal(); y--) {
-            for (int x = from.getVertical()-1; x >= to.getVertical(); x--) {
-
-                Board.getCellAt(x, y)
-                        .filter(c -> !c.getPiece().color().equalsIgnoreCase(color)).ifPresent(c ->
-                        positionVectors.add(c.getPostionVector()));
-
-            }
-        }
-    }
 
     private void moveBackwardRight(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        for (int x = from.getVertical()+1; x <= to.getVertical(); x++) {
-            for (int y = to.getHorizontal()-1; y >= to.getVertical(); y--) {
+        if ((to.getX() < from.getX()) && (to.getY() > from.getY())) {
 
-                Board.getCellAt(x, y)
-                        .filter(c -> !c.getPiece().color().equalsIgnoreCase(color)).ifPresent(c ->
-                        positionVectors.add(c.getPostionVector()));
+            int currentX = from.getX();
+            int currentY = from.getY();
+
+            while (currentX >= to.getX()) {
+
+                currentX += -1;
+                currentY += 1;
+
+                addPosition(positionVectors, currentX, currentY);
             }
         }
     }
 
-    private void moveForwardRightSide(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
+    private void moveBackwardLeft(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        for (int x = from.getVertical()+1; x <= to.getVertical(); x++) {
-            for (int y = from.getHorizontal()+1; y <= to.getHorizontal(); y++) {
-                PositionVector to1 = new PositionVector(x, y);
+        if (to.getY() < from.getX() && (to.getY() < from.getY())) {
 
-                Board.getCellAt(x,y)
-                        .filter(c -> !c.getPiece().color().equalsIgnoreCase(color))
-                        .ifPresent(c ->
-                                positionVectors.add(to1));
+            int currentX = from.getX();
+            int currentY = from.getY();
 
+            while (currentX >= to.getX()) {
+
+                currentX += -1;
+                currentY += -1;
+
+                addPosition(positionVectors, currentX, currentY);
             }
         }
+    }
+
+    private void moveForwardLeft(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
+
+        if ((to.getX() > from.getX()) && (to.getY() < from.getY())) {
+
+            int currentX = from.getX();
+            int currentY = from.getY();
+
+            while (currentX <= to.getX()) {
+
+                currentX += 1;
+                currentY += -1;
+
+                addPosition(positionVectors, currentX, currentY);
+            }
+        }
+    }
+
+    private void moveForwardRight(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
+
+        if ((to.getX() > from.getX()) && to.getY() > from.getY()) {
+
+            int currentX = from.getX();
+            int currentY = from.getY();
+
+            while (currentX <= to.getX()) {
+
+                currentX += 1;
+                currentY += 1;
+
+                addPosition(positionVectors, currentX, currentY);
+            }
+        }
+    }
+
+    private void addPosition(List<PositionVector> positionVectors, int currentX, int currentY) {
+        getCellAt(currentX, currentY)
+                .filter(c -> !c.getPiece().color().equalsIgnoreCase(color))
+                .ifPresent(c -> positionVectors.add(c.getPostionVector()));
     }
 
     @Override

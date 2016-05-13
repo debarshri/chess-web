@@ -13,8 +13,7 @@ import java.util.Optional;
 public class HorseTest {
 
     @Before
-    public void setup()
-    {
+    public void setup() {
         Board.create();
     }
 
@@ -33,8 +32,7 @@ public class HorseTest {
     }
 
     @Test
-    public void shouldWorkHorizontally()
-    {
+    public void shouldWorkHorizontally() {
 
         PositionVector from = new PositionVector(8, 7);
         PositionVector to = new PositionVector(6, 6);

@@ -11,12 +11,14 @@ public class BoardTest {
 
         Board.create();
 
-        Board.move(Color.WHITE, new PositionVector(1,2), new PositionVector(3,3));
-        Board.move(Color.WHITE, new PositionVector(3,3), new PositionVector(4,5));
+        Board.move(Color.WHITE, new PositionVector(1, 2), new PositionVector(3, 3));
+        Board.move(Color.WHITE, new PositionVector(3, 3), new PositionVector(4, 5));
+        Board.move(Color.WHITE, new PositionVector(4, 5), new PositionVector(6, 4));
 
-        Board.move(Color.WHITE, new PositionVector(4,5), new PositionVector(6,4));
+        String[] status = new String[]{""};
+        Board.getKingForColor(Color.BLACK).ifPresent( king -> status[0] = Board.checkStatus(king));
 
-        System.out.println(Board.ifCheck(Color.BLACK));
+        System.out.println(status[0]);
 
     }
 }

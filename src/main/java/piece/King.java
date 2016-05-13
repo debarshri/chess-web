@@ -2,11 +2,12 @@ package piece;
 
 import game.Piece;
 import utils.Color;
-import utils.KingUtils;
 import utils.PositionVector;
 
 import java.util.List;
 import java.util.Optional;
+
+import static utils.KingUtils.generatePossibleKingMoves;
 
 public class King implements Piece {
 
@@ -24,7 +25,7 @@ public class King implements Piece {
     @Override
     public Optional<PositionVector> step(PositionVector from, PositionVector to) {
 
-        List<PositionVector> positionVectors = KingUtils.generatePossibleKingMoves(from);
+        List<PositionVector> positionVectors = generatePossibleKingMoves(from);
 
         if (positionVectors.contains(to)) {
             return Optional.of(to);
@@ -35,7 +36,7 @@ public class King implements Piece {
 
     @Override
     public List<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
-        return  KingUtils.generatePossibleKingMoves(from);
+        return generatePossibleKingMoves(from);
     }
 
 

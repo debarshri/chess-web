@@ -8,7 +8,9 @@ import utils.PositionVector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
+
+import static game.Initializer.reverseRange;
+import static java.util.stream.IntStream.rangeClosed;
 
 public class Boat implements Piece {
     private final String color;
@@ -39,11 +41,11 @@ public class Boat implements Piece {
 
         List<PositionVector> positionVectors = new ArrayList<>();
 
-        if (from.getHorizontal() == to.getHorizontal()) {
+        if (from.getY() == to.getY()) {
             horizontalForward(from, to, positionVectors);
             horizontalBackward(from, to, positionVectors);
 
-        } else if (to.getVertical() == from.getVertical()) {
+        } else if (to.getX() == from.getX()) {
             verticalForward(from, to, positionVectors);
             verticalBackward(from, to, positionVectors);
         }
@@ -53,18 +55,18 @@ public class Boat implements Piece {
 
     private void verticalBackward(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        Board.revRange(to.getHorizontal(), from.getHorizontal())
+        reverseRange(to.getY(), from.getY())
                 .forEach(i ->
-                        Board.getCellAt(to.getVertical(), i)
+                        Board.getCellAt(to.getX(), i)
                                 .filter(f -> !f.getPiece().color().equalsIgnoreCase(color))
                                 .ifPresent(f -> positionVectors.add(f.getPostionVector())));
     }
 
     private void verticalForward(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        IntStream.rangeClosed(from.getHorizontal(), to.getHorizontal())
+        rangeClosed(from.getY(), to.getY())
                 .forEach(i ->
-                        Board.getCellAt(to.getVertical(), i)
+                        Board.getCellAt(to.getX(), i)
                                 .filter(f -> !f.getPiece().color().equalsIgnoreCase(color))
                                 .ifPresent(f -> positionVectors.add(f.getPostionVector())));
 
@@ -72,17 +74,17 @@ public class Boat implements Piece {
 
     private void horizontalBackward(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        Board.revRange(to.getVertical(), from.getVertical()).forEach(i ->
-                Board.getCellAt(new PositionVector(i, to.getHorizontal()))
+        reverseRange(to.getX(), from.getX()).forEach(i ->
+                Board.getCellAt(new PositionVector(i, to.getY()))
                         .filter(f -> !f.getPiece().color().equalsIgnoreCase(color))
                         .ifPresent(f -> positionVectors.add(f.getPostionVector())));
     }
 
     private void horizontalForward(PositionVector from, PositionVector to, List<PositionVector> positionVectors) {
 
-        IntStream.rangeClosed(from.getVertical(), to.getVertical())
+        rangeClosed(from.getX(), to.getX())
                 .forEach(i ->
-                        Board.getCellAt(new PositionVector(i, to.getHorizontal()))
+                        Board.getCellAt(new PositionVector(i, to.getY()))
                                 .filter(f -> !f.getPiece().color().equalsIgnoreCase(color))
                                 .ifPresent(f -> positionVectors.add(f.getPostionVector())));
     }

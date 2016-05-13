@@ -10,8 +10,8 @@ public class KingUtils {
         //todo
         List<PositionVector> positionVectors = new ArrayList<>();
 
-        int horizontal = positionVector.getHorizontal();
-        int vertical = positionVector.getVertical();
+        int horizontal = positionVector.getY();
+        int vertical = positionVector.getX();
 
         positionVectors.add(new PositionVector(vertical + 1, horizontal + 1));
         positionVectors.add(new PositionVector(vertical + 1, horizontal));
@@ -20,5 +20,4 @@ public class KingUtils {
 
         return positionVectors;
     }
-
 }

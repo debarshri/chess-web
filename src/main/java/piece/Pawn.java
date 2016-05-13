@@ -1,6 +1,5 @@
 package piece;
 
-import game.Board;
 import game.Piece;
 import utils.Color;
 import utils.PositionVector;
@@ -8,6 +7,8 @@ import utils.PositionVector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static game.Board.getCellAt;
 
 public class Pawn implements Piece {
 
@@ -43,22 +44,27 @@ public class Pawn implements Piece {
 
         List<PositionVector> positionVectors = new ArrayList<>();
 
-        int horizontal = from.getHorizontal();
-        int vertical = from.getVertical();
+        int y = from.getY();
+        int x = from.getX();
 
-        Board.getCellAt(vertical + stepMultiplier, horizontal)
+        getCellAt(x + stepMultiplier, y)
                 .filter(c -> c.getPiece().color().isEmpty())
                 .ifPresent(c -> positionVectors.add(c.getPostionVector()));
 
-        Board.getCellAt(vertical + stepMultiplier, horizontal + stepMultiplier)
+        getCellAt(x + stepMultiplier, y + stepMultiplier)
                 .filter(c -> !c.getPiece().color().isEmpty())
                 .filter(c -> color.equalsIgnoreCase(Color.getOther(c.getPiece().color())))
                 .ifPresent(p -> positionVectors.add(p.getPostionVector()));
 
-        Board.getCellAt(vertical - stepMultiplier, horizontal - stepMultiplier)
+        getCellAt(x - stepMultiplier, y + stepMultiplier)
                 .filter(c -> !c.getPiece().color().isEmpty())
                 .filter(c -> color.equalsIgnoreCase(Color.getOther(c.getPiece().color())))
-                .ifPresent(c -> positionVectors.add(c.getPostionVector()));
+                .ifPresent(p -> positionVectors.add(p.getPostionVector()));
+
+        getCellAt(x + stepMultiplier, y - stepMultiplier)
+                .filter(cell -> !cell.getPiece().color().isEmpty())
+                .filter(cell -> color.equalsIgnoreCase(Color.getOther(cell.getPiece().color())))
+                .ifPresent(canMove -> positionVectors.add(canMove.getPostionVector()));
 
         return positionVectors;
     }

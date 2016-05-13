@@ -10,8 +10,7 @@ import utils.PositionVector;
 public class QueenTest {
 
     @Before
-    public void setup()
-    {
+    public void setup() {
         Board.create();
 
     }
