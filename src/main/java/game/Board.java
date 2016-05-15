@@ -8,6 +8,7 @@ import utils.PositionVector;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static game.Initializer.createCells;
@@ -36,9 +37,7 @@ public class Board {
 
         getCellAt(to).ifPresent(cellTo ->
                 getCellAt(from)
-                        .filter(p -> p.getPiece()
-                                .color()
-                                .equalsIgnoreCase(color))
+                        .filter(p -> p.getPiece().color().equalsIgnoreCase(color))
                         .ifPresent(cellFrom ->
                                 cellFrom.getPiece()
                                         .step(from, to)
@@ -139,17 +138,21 @@ public class Board {
         getAllCellsForColor(getOtherColor(kingCell.getPiece().color()))
                 .forEach(m -> m.getPiece()
                         .step(m.getPostionVector(), kingCell.getPostionVector())
-                        .ifPresent(p ->
-                        {
-                            if (checkForMate(kingCell, p)) {
-                                gameStatus[0] = GameStatus.CHECK_AND_MATE;
-                            } else {
-                                gameStatus[0] = GameStatus.CHECK;
-                            }
-                        }));
+                        .ifPresent(checkGameStatus(kingCell, gameStatus)));
 
         return gameStatus[0];
 
+    }
+
+    private static Consumer<PositionVector> checkGameStatus(Cell kingCell, String[] gameStatus) {
+        return p ->
+        {
+            if (checkForMate(kingCell, p)) {
+                gameStatus[0] = GameStatus.CHECK_AND_MATE;
+            } else {
+                gameStatus[0] = GameStatus.CHECK;
+            }
+        };
     }
 
     private static boolean canCheckingPieceBeKilled(PositionVector position, String color) {
@@ -165,8 +168,7 @@ public class Board {
     private static List<Cell> getAllCellsForColor(String color) {
 
         return cells.stream()
-                .filter(cell -> cell.getPiece().color()
-                        .equalsIgnoreCase(color))
+                .filter(cell -> cell.getPiece().color().equalsIgnoreCase(color))
                 .collect(Collectors.toList());
     }
 
