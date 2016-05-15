@@ -4,9 +4,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import game.Board;
-import server.Cell;
+import game.Cell;
 import utils.Color;
-import utils.KingUtils;
 import utils.PositionVector;
 
 public class PawnTest {

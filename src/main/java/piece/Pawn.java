@@ -1,10 +1,10 @@
 package piece;
 
-import game.Piece;
 import utils.Color;
 import utils.PositionVector;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,16 +31,15 @@ public class Pawn implements Piece {
 
     @Override
     public Optional<PositionVector> step(PositionVector from, PositionVector to) {
-        List<PositionVector> positionVectors = generateAllPossibleMoves(from, to);
 
-        if (positionVectors.contains(to)) {
+        if (generateAllPossibleMoves(from, to).contains(to)) {
             return Optional.of(to);
         }
         return Optional.empty();
     }
 
     @Override
-    public List<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
+    public Collection<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
 
         List<PositionVector> positionVectors = new ArrayList<>();
 
@@ -53,17 +52,17 @@ public class Pawn implements Piece {
 
         getCellAt(x + stepMultiplier, y + stepMultiplier)
                 .filter(c -> !c.getPiece().color().isEmpty())
-                .filter(c -> color.equalsIgnoreCase(Color.getOther(c.getPiece().color())))
+                .filter(c -> color.equalsIgnoreCase(Color.getOtherColor(c.getPiece().color())))
                 .ifPresent(p -> positionVectors.add(p.getPostionVector()));
 
         getCellAt(x - stepMultiplier, y + stepMultiplier)
                 .filter(c -> !c.getPiece().color().isEmpty())
-                .filter(c -> color.equalsIgnoreCase(Color.getOther(c.getPiece().color())))
+                .filter(c -> color.equalsIgnoreCase(Color.getOtherColor(c.getPiece().color())))
                 .ifPresent(p -> positionVectors.add(p.getPostionVector()));
 
         getCellAt(x + stepMultiplier, y - stepMultiplier)
                 .filter(cell -> !cell.getPiece().color().isEmpty())
-                .filter(cell -> color.equalsIgnoreCase(Color.getOther(cell.getPiece().color())))
+                .filter(cell -> color.equalsIgnoreCase(Color.getOtherColor(cell.getPiece().color())))
                 .ifPresent(canMove -> positionVectors.add(canMove.getPostionVector()));
 
         return positionVectors;

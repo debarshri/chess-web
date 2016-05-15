@@ -1,10 +1,10 @@
 package piece;
 
-import game.Piece;
 import utils.Color;
 import utils.PositionVector;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +25,7 @@ public class Horse implements Piece {
     @Override
     public Optional<PositionVector> step(PositionVector from, PositionVector to) {
 
-        List<PositionVector> positionVectors = generateAllPossibleMoves(from, to);
-
-        if (positionVectors.contains(to)) {
+        if (generateAllPossibleMoves(from, to).contains(to)) {
             return Optional.of(to);
         } else {
             return Optional.empty();
@@ -35,7 +33,7 @@ public class Horse implements Piece {
     }
 
     @Override
-    public List<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
+    public Collection<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
         List<PositionVector> positionVectorList = new ArrayList<>();
 
         int horizontal = from.getY();

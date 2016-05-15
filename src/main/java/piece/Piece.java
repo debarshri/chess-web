@@ -1,8 +1,8 @@
-package game;
+package piece;
 
 import utils.PositionVector;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 public interface Piece {
@@ -11,5 +11,5 @@ public interface Piece {
 
     Optional<PositionVector> step(PositionVector from, PositionVector to);
 
-    List<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to);
+    Collection<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to);
 }

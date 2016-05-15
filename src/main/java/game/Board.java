@@ -1,23 +1,22 @@
 package game;
 
-
 import piece.Empty;
 import piece.King;
-import server.Cell;
-import utils.Color;
-import utils.KingUtils;
+import piece.Piece;
 import utils.PositionVector;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static game.Initializer.createCells;
+import static utils.Color.getOtherColor;
+import static utils.KingUtils.generatePossibleKingMoves;
 
 public class Board {
 
-    private Board()
-    {
+    private Board() {
         //ignore
     }
 
@@ -50,7 +49,7 @@ public class Board {
         Piece piece = cellTo.getPiece();
         Piece piece1 = cellFrom.getPiece();
 
-        if (piece.color().equalsIgnoreCase(Color.getOther(piece1.color()))) {
+        if (piece.color().equalsIgnoreCase(getOtherColor(piece1.color()))) {
             cellTo.setPiece(piece1);
             cellFrom.setPiece(new Empty(""));
         } else {
@@ -71,8 +70,7 @@ public class Board {
     public static Optional<Cell> getCellAt(int x, int y) {
 
         return cells.stream()
-                .filter(c -> c.getY() == y &&
-                        c.getX() == x)
+                .filter(c -> c.getY() == y && c.getX() == x)
                 .findAny();
     }
 
@@ -138,36 +136,63 @@ public class Board {
 
         String[] gameStatus = new String[]{GameStatus.OK};
 
-        cells.stream().filter(c -> !c.getPiece().color().isEmpty())
-                .filter(c -> c.getPiece().color().equals(Color.getOther(kingCell.getPiece().color())))
-                .forEach(m -> m.getPiece().step(m.getPostionVector(), kingCell.getPostionVector())
-                        .ifPresent(p -> gameStatus[0] = GameStatus.CHECK));
-
-        if (gameStatus[0].equals(GameStatus.CHECK)) {
-            if (checkForMate(kingCell)) {
-                gameStatus[0] = GameStatus.CHECK_AND_MATE;
-            }
-        }
+        getAllCellsForColor(getOtherColor(kingCell.getPiece().color()))
+                .forEach(m -> m.getPiece()
+                        .step(m.getPostionVector(), kingCell.getPostionVector())
+                        .ifPresent(p ->
+                        {
+                            if (checkForMate(kingCell, p)) {
+                                gameStatus[0] = GameStatus.CHECK_AND_MATE;
+                            } else {
+                                gameStatus[0] = GameStatus.CHECK;
+                            }
+                        }));
 
         return gameStatus[0];
 
     }
 
-    public static boolean checkForMate(Cell king) {
+    private static boolean canCheckingPieceBeKilled(PositionVector position, String color) {
+        Cell checkingCell = getCellAt(position).get();
 
-        List<Boolean> status = new ArrayList<>();
-        List<PositionVector> kingMoves = KingUtils.generatePossibleKingMoves(king.getPostionVector());
+        return getAllCellsForColor(color).stream()
+                .map(cell -> checkingCell.getPiece().step(position, cell.getPostionVector()))
+                .findAny()
+                .isPresent();
+    }
 
-        kingMoves.stream()
-                .forEach(cell -> Board.getCellAt(cell)
-                        .ifPresent(k ->
-                        cells.stream()
-                                .filter(f -> !f.getPiece().color().isEmpty())
-                                .filter(f -> f.getPiece().color().equals(Color.getOther(k.getPiece().color())))
-                                .forEach(p -> status.add(p.getPiece().step(k.getPostionVector(),
-                                        p.getPostionVector()).isPresent()))));
 
-        return !status.contains(false);
+    private static List<Cell> getAllCellsForColor(String color) {
+
+        return cells.stream()
+                .filter(cell -> cell.getPiece().color()
+                        .equalsIgnoreCase(color))
+                .collect(Collectors.toList());
+    }
+
+    static boolean checkForMate(Cell king, PositionVector positionVector) {
+
+        Collection<PositionVector> kingMoves = generatePossibleKingMoves(king.getPostionVector(), king.getPiece().color());
+
+        if (kingMoves.isEmpty()) {
+            return !canCheckingPieceBeKilled(positionVector, king.getPiece().color());
+        } else {
+            return kingCannotMoveSafely(king, kingMoves);
+        }
+    }
+
+    static boolean kingCannotMoveSafely(Cell king, Collection<PositionVector> kingMoves) {
+
+        List<Cell> allCellsForColor = getAllCellsForColor(getOtherColor(king.getPiece().color()));
+
+        Collection<Optional<PositionVector>> collect = kingMoves.stream()
+                .map(cell -> getCellAt(cell).get())
+                .flatMap(cell -> allCellsForColor.stream()
+                        .map(f -> f.getPiece().step(f.getPostionVector(), cell.getPostionVector())))
+                .filter(Optional::isPresent)
+                .collect(Collectors.toSet());
+
+        return kingMoves.size() == collect.size();
     }
 
     public static Optional<Cell> getKingForColor(String color) {

@@ -1,14 +1,18 @@
 package route;
 
 import game.Board;
-import server.Cell;
+import game.GameStatus;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import utils.Color;
 import utils.PositionVector;
 
-import java.util.Optional;
+import java.util.function.Consumer;
+
+import static game.Board.getKingForColor;
+import static java.lang.Integer.valueOf;
+import static utils.Color.getOtherColor;
 
 public class Move implements Route {
 
@@ -18,26 +22,65 @@ public class Move implements Route {
         String from = request.queryParams("from");
         String to = request.queryParams("to");
 
-        String[] fromSplit = from.split(",");
-        String[] toSplit = to.split(",");
+        Parse parse = new Parse(from, to).invoke();
+
+        String[] fromSplit = parse.getFromSplit();
+        String[] toSplit = parse.getToSplit();
 
         String color = request.queryParams("color");
 
         Board.move(color,
-                new PositionVector(Integer.valueOf(fromSplit[0]), Integer.valueOf(fromSplit[1])),
-                new PositionVector(Integer.valueOf(toSplit[0]), Integer.valueOf(toSplit[1])));
+                new PositionVector(valueOf(fromSplit[0]), valueOf(fromSplit[1])),
+                new PositionVector(valueOf(toSplit[0]), valueOf(toSplit[1])));
 
-        String other = Color.getOther(color);
+        response.cookie("turn", getOtherColor(color));
 
-        Optional<Cell> blackKing = Board.getKingForColor(Color.BLACK);
-        blackKing.ifPresent( k -> response.cookie("white_status", Board.checkStatus(k)));
+        getKingForColor(Color.BLACK)
+                .map(Board::checkStatus)
+                .ifPresent(setGameStatus(response, "black_status"));
 
-        Optional<Cell> whiteking = Board.getKingForColor(Color.WHITE);
-        whiteking.ifPresent( k -> response.cookie("black_status", Board.checkStatus(k)));
+        getKingForColor(Color.WHITE)
+                .map(Board::checkStatus)
+                .ifPresent(setGameStatus(response, "white_status"));
 
-        response.cookie("turn", other);
         response.redirect("/play");
 
         return null;
+    }
+
+    private Consumer<String> setGameStatus(Response response, String color_status) {
+        return value -> {
+            if (value.equals(GameStatus.CHECK_AND_MATE)) {
+                response.cookie("turn", GameStatus.CHECK_AND_MATE);
+            }
+
+            response.cookie(color_status, value);
+        };
+    }
+
+    private class Parse {
+        private String from;
+        private String to;
+        private String[] fromSplit;
+        private String[] toSplit;
+
+        public Parse(String from, String to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        public String[] getFromSplit() {
+            return fromSplit;
+        }
+
+        public String[] getToSplit() {
+            return toSplit;
+        }
+
+        public Parse invoke() {
+            fromSplit = from.split(",");
+            toSplit = to.split(",");
+            return this;
+        }
     }
 }

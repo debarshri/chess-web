@@ -1,7 +1,6 @@
 package game;
 
 import piece.*;
-import server.Cell;
 import utils.Color;
 import utils.PositionVector;
 
@@ -59,6 +58,12 @@ public class Initializer {
     }
 
     public static double calculateAbsoluteSlope(PositionVector from, PositionVector to) {
-        return (to.getY() - from.getY()) / (to.getX() - from.getX());
+        int i = to.getX() - from.getX();
+
+        if (i == 0) {
+            return 0.0d;
+        }
+
+        return (to.getY() - from.getY()) / i;
     }
 }

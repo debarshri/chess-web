@@ -12,7 +12,6 @@ public class QueenTest {
     @Before
     public void setup() {
         Board.create();
-
     }
 
     @Test
@@ -26,9 +25,17 @@ public class QueenTest {
 
         Board.move(Color.WHITE, from, to);
 
-
-        System.out.println(Board.getCellAt(to).get().getPiece());
         Assert.assertTrue(Board.getCellAt(to).get().getPiece() instanceof Queen);
+    }
 
+    @Test
+    public void queenShouldWorkWithStatusCheck() {
+        Board.create();
+
+        Board.getCellAt(4, 6).get().setPiece(new Queen(Color.WHITE));
+        Board.move(Color.WHITE, new PositionVector(4, 6), new PositionVector(8, 2));
+        Board.checkStatus(Board.getKingForColor(Color.BLACK).get());
+
+        Assert.assertTrue(Board.getCellAt(new PositionVector(8, 2)).get().getPiece() instanceof Queen);
     }
 }

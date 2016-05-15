@@ -4,7 +4,7 @@ import game.Board;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import server.Cell;
+import game.Cell;
 import utils.Color;
 import utils.PositionVector;
 

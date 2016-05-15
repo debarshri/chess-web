@@ -1,6 +1,6 @@
-package server;
+package game;
 
-import game.Piece;
+import piece.Piece;
 import utils.PositionVector;
 
 public class Cell {

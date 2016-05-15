@@ -1,23 +1,45 @@
 package utils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import static game.Board.getCellAt;
 
 public class KingUtils {
 
-    public static List<PositionVector> generatePossibleKingMoves(PositionVector positionVector) {
+    public static Set<PositionVector> generatePossibleKingMoves(PositionVector positionVector, String color) {
 
         //todo
-        List<PositionVector> positionVectors = new ArrayList<>();
+        Set<PositionVector> positionVectors = new HashSet<>();
 
         int horizontal = positionVector.getY();
         int vertical = positionVector.getX();
 
-        positionVectors.add(new PositionVector(vertical + 1, horizontal + 1));
-        positionVectors.add(new PositionVector(vertical + 1, horizontal));
-        positionVectors.add(new PositionVector(vertical, horizontal + 1));
-        positionVectors.add(new PositionVector(vertical, horizontal));
+        add(horizontal, vertical, 1, positionVectors, color);
+        add(horizontal, vertical, -1, positionVectors, color);
 
         return positionVectors;
+    }
+
+    private static void add(int horizontal, int vertical, int step, Set<PositionVector> positionVectors, String color) {
+        getCellAt(vertical + step, horizontal + step)
+                .filter(cell1 -> !cell1.getPiece().color().equalsIgnoreCase(color))
+                .ifPresent(cell -> positionVectors.add(cell.getPostionVector()));
+
+        getCellAt(vertical + step, horizontal)
+                .filter(cell1 -> !cell1.getPiece().color().equalsIgnoreCase(color))
+                .ifPresent(cell -> positionVectors.add(cell.getPostionVector()));
+
+        getCellAt(vertical - step, horizontal + step)
+                .filter(cell1 -> !cell1.getPiece().color().equalsIgnoreCase(color))
+                .ifPresent(cell -> positionVectors.add(cell.getPostionVector()));
+
+        getCellAt(vertical + step, horizontal - step)
+                .filter(cell1 -> !cell1.getPiece().color().equalsIgnoreCase(color))
+                .ifPresent(cell -> positionVectors.add(cell.getPostionVector()));
+
+        getCellAt(vertical, horizontal + step)
+                .filter(cell1 -> !cell1.getPiece().color().equalsIgnoreCase(color))
+                .ifPresent(cell -> positionVectors.add(cell.getPostionVector()));
     }
 }

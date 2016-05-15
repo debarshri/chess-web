@@ -1,10 +1,9 @@
 package piece;
 
-import game.Piece;
 import utils.PositionVector;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 public class Empty implements Piece {
@@ -27,7 +26,7 @@ public class Empty implements Piece {
     }
 
     @Override
-    public List<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
+    public Collection<PositionVector> generateAllPossibleMoves(PositionVector from, PositionVector to) {
         return new ArrayList<>();
     }
 
